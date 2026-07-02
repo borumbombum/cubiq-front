@@ -357,6 +357,7 @@
 	"changelogNoMore": "No more commits",
 	"changelogNoCommits": "No commits to display",
 	"changelogError": "Failed to load commits",
+	"changelogCommitStats": "Commits: Human ({human}) vs Agent ({agent})",
 	"addNote": "New note",
 	"addNotePlaceholder": "So, write your note here...",
 	"notSynced": "Not synced",

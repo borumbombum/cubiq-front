@@ -359,6 +359,7 @@
 	"changelogNoMore": "Sin más commits",
 	"changelogNoCommits": "No hay commits para mostrar",
 	"changelogError": "Error al cargar commits",
+	"changelogCommitStats": "Commits: Humanos ({human}) vs Agentes ({agent})",
 	"addNote": "Nueva nota",
 	"addNotePlaceholder": "Entonces, escribe tu nota aquí...",
 	"notSynced": "No sincronizada",

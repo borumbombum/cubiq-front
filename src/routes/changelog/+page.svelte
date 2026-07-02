@@ -24,6 +24,21 @@
 	let hasMore = $state(true);
 	let mounted = $state(false);
 
+	let monthStats = $derived.by(() => {
+		const stats = new Map<string, { agent: number; human: number }>();
+		for (const commit of commits) {
+			const key = getMonthKey(commit.date);
+			if (!stats.has(key)) stats.set(key, { agent: 0, human: 0 });
+			const s = stats.get(key)!;
+			if (commit.message?.startsWith('AGENT:')) {
+				s.agent++;
+			} else {
+				s.human++;
+			}
+		}
+		return stats;
+	});
+
 	$effect(() => {
 		if (form?.success === true && form?.commits) {
 			const newCommits = form.commits as Commit[];
@@ -230,6 +245,12 @@
 					<h2 class="font-pixel text-base-content/60 mt-8 mb-4 text-lg font-black">
 						{formatMonthHeader(monthKey)}
 					</h2>
+					{@const stat = monthStats.get(monthKey)}
+					{#if stat}
+						<p class="font-mono text-base-content/40 mb-3 text-xs">
+							{m.changelogCommitStats({ human: stat.human, agent: stat.agent })}
+						</p>
+					{/if}
 				{/if}
 				<div class="border-base-content/20 border-l-2 py-2 pl-4">
 					<div class="text-base-content/50 font-mono text-xs">{commit.sha.slice(0, 7)}</div>
