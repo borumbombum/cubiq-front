@@ -4,31 +4,51 @@ import type { PageServerLoad, Actions } from './$types';
 
 export const load: PageServerLoad = async () => {
 	const now = new Date();
-	const year = now.getFullYear();
-	const month = String(now.getMonth() + 1).padStart(2, '0');
-	const startDate = `${year}-${month}-01`;
-	const endDate = `${year}-${month}-${String(now.getDate()).padStart(2, '0')}`;
+	let year = now.getFullYear();
+	let month = now.getMonth() + 1;
+	let commits: unknown[] = [];
+	let startDate = '';
+	let endDate = '';
+	let attempts = 0;
+	const MAX_BACKTRACK = 12;
+	let fetchError: string | null = null;
 
-	try {
-		const result = await apiClient.get(
-			`/reports/github/commits?startDate=${startDate}&endDate=${endDate}`,
-			{ Authorization: `Bearer ${CUBIQ_API_APP_TOKEN}` }
-		);
+	while (commits.length === 0 && attempts < MAX_BACKTRACK) {
+		const monthStr = String(month).padStart(2, '0');
+		startDate = `${year}-${monthStr}-01`;
+		const lastDay = new Date(year, month, 0).getDate();
+		endDate =
+			attempts === 0
+				? `${year}-${monthStr}-${String(now.getDate()).padStart(2, '0')}`
+				: `${year}-${monthStr}-${lastDay}`;
 
-		return {
-			commits: result.data?.data || [],
-			currentStartDate: startDate,
-			currentEndDate: endDate
-		};
-	} catch (e) {
-		console.error('Changelog: Failed to fetch commits:', e);
-		return {
-			commits: [],
-			error: 'Failed to load commits',
-			currentStartDate: startDate,
-			currentEndDate: endDate
-		};
+		try {
+			const result = await apiClient.get(
+				`/reports/github/commits?startDate=${startDate}&endDate=${endDate}`,
+				{ Authorization: `Bearer ${CUBIQ_API_APP_TOKEN}` }
+			);
+			commits = result.data?.data || [];
+		} catch (e) {
+			console.error(`Changelog: Failed to fetch ${startDate}..${endDate}:`, e);
+			if (!fetchError) fetchError = 'Failed to load commits';
+		}
+
+		if (commits.length === 0) {
+			month--;
+			if (month < 1) {
+				month = 12;
+				year--;
+			}
+			attempts++;
+		}
 	}
+
+	return {
+		commits,
+		currentStartDate: startDate,
+		currentEndDate: endDate,
+		...(fetchError ? { error: fetchError } : {})
+	};
 };
 
 export const actions: Actions = {
