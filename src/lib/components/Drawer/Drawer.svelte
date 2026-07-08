@@ -14,6 +14,7 @@
 	// Effect to add/remove no-scroll class when drawer state changes
 	$effect(() => {
 		if (drawerState.active) {
+			window.scrollTo(0, 0);
 			// Add no-scroll class to body and html when drawer is active
 			document.body.classList.add('no-scroll');
 			document.documentElement.classList.add('no-scroll');

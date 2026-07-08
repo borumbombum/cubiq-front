@@ -25,7 +25,9 @@
 
 	const locale = $state(getLocale());
 	const PRODUCTS = getProductsFromLab(locale);
-	const drawerProductsForLang = $state(PRODUCTS.filter((prod: ProductData) => prod.isMain));
+	const drawerProductsForLang = $state(
+		PRODUCTS.filter((prod: ProductData) => prod.isMain && !prod.hideFromNav)
+	);
 
 	const API_PRODUCTS = getProducts(locale);
 	const drawerApisForLang = $state(
@@ -268,7 +270,7 @@
 	>
 		<div class="flex justify-center self-center text-left align-middle">
 			<FileClock class="text-sun mr-2 h-4 w-4 self-center" />
-			<span class="self-center font-semibold">Changelog</span>
+			<span class="self-center font-semibold">Roadmap</span>
 		</div>
 	</a>
 

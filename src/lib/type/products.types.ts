@@ -80,4 +80,5 @@ export interface ProductData {
 	online?: boolean;
 	unavailable?: boolean;
 	newWindow?: boolean;
+	hideFromNav?: boolean;
 }

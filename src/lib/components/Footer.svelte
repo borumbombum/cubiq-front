@@ -19,7 +19,7 @@
 
 	const locale = getLocale();
 	const LAB_PRODUCTS = getProductsFromLab(locale);
-	const labProductsForLang = LAB_PRODUCTS.filter((prod: ProductData) => prod.isMain).slice(0, 4);
+	const labProductsForLang = LAB_PRODUCTS.filter((prod: ProductData) => prod.isMain && !prod.hideFromNav).slice(0, 4);
 
 	function openContactModal() {
 		modalState.open({

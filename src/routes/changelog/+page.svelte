@@ -165,7 +165,7 @@
 
 <Header
 	titleLeft={m.the()}
-	titleRight="Changelog"
+	titleRight="Roadmap"
 	background="rocket"
 	heroContent={m.heroContentChangelog()}
 	buttons={false}
@@ -247,7 +247,7 @@
 					</h2>
 					{@const stat = monthStats.get(monthKey)}
 					{#if stat}
-						<p class="font-mono text-base-content/40 mb-3 text-xs">
+						<p class="text-base-content/40 mb-3 font-mono text-xs">
 							{m.changelogCommitStats({ human: stat.human, agent: stat.agent })}
 						</p>
 					{/if}

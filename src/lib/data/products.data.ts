@@ -101,21 +101,6 @@ export const getProducts = (locale?: 'pt' | 'en' | 'es') => [
 
 export const getProductsFromLab = (locale?: 'pt' | 'en' | 'es') => [
 	{
-		id: LabProduct.BQPAY,
-		name: LabProduct.BQPAY,
-		logo: '/products/bqpay-logo.png',
-		logoSquare: '/products/bqpay-logo-round.png',
-		isMain: true,
-		slogan: m.productBqPaySlogan({}, { locale }),
-		sloganSimple: '',
-		details: m.productBqPayDetails({}, { locale }),
-		isBold: true,
-		primary: true,
-		underDevelopment: true,
-		url: localizeHref('/blog/bqpay-prelaunch'),
-		newWindow: false
-	},
-	{
 		id: LabProduct.LNBEER,
 		name: LabProduct.LNBEER,
 		logo: '/products/malthaus-logo.png',
@@ -131,25 +116,10 @@ export const getProductsFromLab = (locale?: 'pt' | 'en' | 'es') => [
 		newWindow: true
 	},
 	{
-		id: LabProduct.BETIZEN,
-		name: LabProduct.BETIZEN,
-		logo: '/products/betizen-logo.png',
-		logoSquare: '/products/betizen-logo-round.png',
-		isMain: true,
-		slogan: m.productBetizenSlogan({}, { locale }),
-		sloganSimple: '',
-		details: m.productBetizenDetails({}, { locale }),
-		isBold: true,
-		primary: true,
-		underDevelopment: false,
-		url: 'https://www.betizen.org',
-		newWindow: true
-	},
-	{
 		id: LabProduct.ENVIQS,
 		name: LabProduct.ENVIQS,
 		logo: '/products/enviqs-logo.png',
-		logoSquare: '/products/enviqs-logo.png',
+		logoSquare: '/products/enviqs-logo-rounded.png',
 		isMain: true,
 		slogan: m.productEnviqsSlogan({}, { locale }),
 		sloganSimple: '',
@@ -158,6 +128,38 @@ export const getProductsFromLab = (locale?: 'pt' | 'en' | 'es') => [
 		primary: true,
 		underDevelopment: false,
 		url: 'https://www.enviqs.com',
+		newWindow: true
+	},
+	{
+		id: LabProduct.BQPAY,
+		name: LabProduct.BQPAY,
+		logo: '/products/bqpay-logo.png',
+		logoSquare: '/products/bqpay-logo-round.png',
+		isMain: true,
+		slogan: m.productBqPaySlogan({}, { locale }),
+		sloganSimple: '',
+		details: m.productBqPayDetails({}, { locale }),
+		isBold: true,
+		primary: true,
+		underDevelopment: true,
+		url: localizeHref('/blog/bqpay-prelaunch'),
+		newWindow: false
+	},
+
+	{
+		id: LabProduct.BETIZEN,
+		name: LabProduct.BETIZEN,
+		logo: '/products/betizen-logo.png',
+		logoSquare: '/products/betizen-logo-round.png',
+		isMain: true,
+		hideFromNav: true,
+		slogan: m.productBetizenSlogan({}, { locale }),
+		sloganSimple: '',
+		details: m.productBetizenDetails({}, { locale }),
+		isBold: true,
+		primary: true,
+		underDevelopment: false,
+		url: 'https://www.betizen.org',
 		newWindow: true
 	}
 ];

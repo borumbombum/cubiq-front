@@ -20,7 +20,9 @@
 
 	const locale = $state(getLocale());
 	const PRODUCTS = getProductsFromLab(locale);
-	let productsForLang = $state(PRODUCTS.filter((prod: ProductData) => prod.isMain));
+	let productsForLang = $state(
+		PRODUCTS.filter((prod: ProductData) => prod.isMain && !prod.hideFromNav)
+	);
 
 	const API_PRODUCTS = getProducts(locale);
 	let apisForLang = $state(API_PRODUCTS.filter((prod: ProductData) => prod.isMain).slice(0, 3));
@@ -44,7 +46,7 @@
 		</div>
 		<!-- Main menu -->
 		<ul
-			class="menu dropdown-content bg-base-100 rounded-box z-1 mt-4 w-[490px] px-5 py-3 shadow-md"
+			class="menu dropdown-content bg-base-100 rounded-box z-1 mt-4 w-[540px] px-5 py-3 shadow-md"
 		>
 			{#each productsForLang as drawer, i}
 				<li class="w-full">
@@ -211,5 +213,5 @@
 	<!-- <a class="uppercase" href={localizeHref('/blog')}>Blog</a> -->
 	<!-- <a class="uppercase" href={localizeHref('/blog')}>Blog</a> -->
 
-	<a class="uppercase" href={localizeHref('/changelog')}>Changelog</a>
+	<a class="uppercase" href={localizeHref('/changelog')}>Roadmap</a>
 </div>

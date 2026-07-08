@@ -18,6 +18,11 @@ export const AppConfig = {
 				pt: 'https://wa.me/5511966090456',
 				en: 'https://wa.me/5511966090456'
 			},
+			phones: {
+				es: '+598 92 284 428',
+				pt: '+55 11 96609-0456',
+				en: '+55 11 96609-0456'
+			},
 			telegram: 'https://t.me/cubiq_lat',
 			email: 'nicolas@cubiq.lat',
 			github: 'https://github.com/minimo-io',
