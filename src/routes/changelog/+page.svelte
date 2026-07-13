@@ -245,7 +245,7 @@
 				{@const monthKey = getMonthKey(commit.date)}
 				{@const prevMonthKey = i > 0 ? getMonthKey(commits[i - 1].date) : null}
 				{#if prevMonthKey !== monthKey}
-					<h2 class="font-pixel text-base-content/60 mt-8 mb-4 text-lg font-black">
+					<h2 class="font-pixel text-[#F44018] mt-8 mb-4 text-lg font-black">
 						{formatMonthHeader(monthKey)}
 					</h2>
 					{@const stat = monthStats.get(monthKey)}
