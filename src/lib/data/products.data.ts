@@ -28,13 +28,13 @@ export const getApiBrandPairs = (locale?: 'pt' | 'en' | 'es') => [
 			name: m.productShippingName({}, { locale }),
 			details: m.productShippingDetails({}, { locale }),
 			icon: Truck,
-			url: localizeHref('/docs', { locale }),
-			underDevelopment: true
+			url: 'https://api.enviqs.com/docs',
+			underDevelopment: false
 		},
 		brand: {
 			name: LabProduct.ENVIQS,
-			logo: '/products/enviqs-logo-2.png',
-			logoSquare: '/products/enviqs-logo-2.png',
+			logo: '/products/enviqs-logo.png',
+			logoSquare: '/products/enviqs-logo.png',
 			url: 'https://www.enviqs.com',
 			newWindow: true
 		}

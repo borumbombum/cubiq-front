@@ -2,6 +2,7 @@
 	import Header from '$lib/components/Header/Header.svelte';
 	import Meta from '$lib/components/Meta.svelte';
 	import { m } from '$paraglide/messages';
+	import { getLocale } from '$paraglide/runtime';
 	import { enhance } from '$app/forms';
 
 	interface Commit {
@@ -14,6 +15,8 @@
 	}
 
 	let { data, form } = $props();
+
+	const locale = getLocale();
 
 	let commits = $state<Commit[]>(data.commits ?? []);
 	let loading = $state(false);
@@ -75,11 +78,11 @@
 	function formatMonthHeader(monthKey: string): string {
 		const [year, month] = monthKey.split('-');
 		const date = new Date(parseInt(year), parseInt(month) - 1);
-		return date.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+		return date.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
 	}
 
 	function formatDate(dateStr: string): string {
-		return new Date(dateStr).toLocaleDateString(undefined, {
+		return new Date(dateStr).toLocaleDateString(locale, {
 			year: 'numeric',
 			month: 'short',
 			day: 'numeric'

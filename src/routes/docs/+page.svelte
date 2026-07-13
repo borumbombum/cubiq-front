@@ -12,8 +12,11 @@
 	import { Product } from '$lib/type/products.types';
 
 	const SWAGGER_URL = `${AppConfig.apiUrl}/docs-json`;
+	const SWAGGER_URL_SHIPPING = 'https://api.enviqs.com/docs-json';
 
 	const PAIRS = getApiBrandPairs(getLocale());
+
+	type ApiSource = 'market' | 'shipping';
 
 	type SchemaObject = {
 		type?: string;
@@ -68,10 +71,14 @@
 
 	type GroupedEndpoints = Record<string, Endpoint[]>;
 
-	let spec: { components?: { schemas?: Record<string, SchemaObject> } } | null = $state(null);
+	let activeApi = $state<ApiSource>('market');
+	let specs: Record<string, any> = $state({});
+	let spec = $derived(specs[activeApi] ?? null);
 	let grouped: GroupedEndpoints = $state({});
 	let loading = $state(true);
 	let fetchError = $state(false);
+	let loadingShipping = $state(false);
+	let shippingFetchError = $state(false);
 	let activePage = $state('quickstart');
 	let openCards = $state(new Set<string>());
 	let openTags = $state(new Set<string>());
@@ -90,8 +97,8 @@
 		try {
 			const res = await fetch(SWAGGER_URL);
 			if (!res.ok) throw new Error('Failed to fetch');
-			spec = await res.json();
-			grouped = groupByTag(spec as Record<string, unknown>);
+			specs.market = await res.json();
+			grouped = groupByTag(specs.market as Record<string, unknown>);
 			applyTagFromUrl();
 		} catch {
 			fetchError = true;
@@ -221,6 +228,39 @@
 		}, 100);
 	}
 
+	function switchApi(api: ApiSource) {
+		if (api === activeApi) return;
+		activeApi = api;
+		openCards = new Set();
+		openTags = new Set();
+		activePage = 'reference';
+		if (specs[api]) {
+			grouped = groupByTag(specs[api] as Record<string, unknown>);
+		} else if (api === 'shipping') {
+			grouped = {};
+			loadShippingSpec();
+		}
+		setTimeout(() => {
+			document.querySelector('.docs-content')?.scrollIntoView({ behavior: 'smooth' });
+		}, 100);
+	}
+
+	async function loadShippingSpec() {
+		loadingShipping = true;
+		shippingFetchError = false;
+		grouped = {};
+		try {
+			const res = await fetch(SWAGGER_URL_SHIPPING);
+			if (!res.ok) throw new Error('Failed to fetch');
+			specs.shipping = await res.json();
+			grouped = groupByTag(specs.shipping as Record<string, unknown>);
+		} catch {
+			shippingFetchError = true;
+		} finally {
+			loadingShipping = false;
+		}
+	}
+
 	function responseClass(code: string) {
 		if (code.startsWith('2')) return 'text-success';
 		if (code.startsWith('4')) return 'text-error';
@@ -273,8 +313,34 @@
 			{@const Icon = pair.api.icon}
 			{#if pair.id === Product.MARKET}
 				<button
-					onclick={() => goToTag('E-commerce')}
-					class="card group hover:border-primary/30 hover:shadow-primary/5 border-primary/30 flex w-full flex-row items-start gap-4 border bg-black p-4 text-left transition-all duration-200 hover:shadow-2xl"
+					onclick={() => switchApi('market')}
+					class="card group hover:border-primary/30 hover:shadow-primary/5 border-primary/30 flex w-full flex-row items-start gap-4 border bg-black p-4 text-left transition-all duration-200 hover:shadow-2xl {activeApi === 'market' ? 'border-primary ring-primary/30 ring-2' : ''}"
+				>
+					<Icon
+						class="text-primary relative z-10 h-10 w-10 shrink-0 stroke-[0.5] transition-transform duration-500 group-hover:scale-110"
+					/>
+					<div class="relative z-10 min-w-0 flex-1">
+						<div class="flex items-center justify-between gap-2">
+							<h3
+								class="group-hover:text-primary text-lg font-bold tracking-wide text-white uppercase transition-colors duration-300"
+							>
+								{pair.api.name}
+							</h3>
+							<ChevronRight
+								class="h-5 w-5 shrink-0 text-white transition-transform duration-300 group-hover:translate-x-1"
+							/>
+						</div>
+						<p
+							class="font-sans text-sm leading-tight text-gray-400 transition-colors duration-300 group-hover:text-gray-300"
+						>
+							{pair.api.details}
+						</p>
+					</div>
+				</button>
+			{:else if pair.id === Product.SHIP}
+				<button
+					onclick={() => switchApi('shipping')}
+					class="card group hover:border-primary/30 hover:shadow-primary/5 border-primary/30 flex w-full flex-row items-start gap-4 border bg-black p-4 text-left transition-all duration-200 hover:shadow-2xl {activeApi === 'shipping' ? 'border-primary ring-primary/30 ring-2' : ''}"
 				>
 					<Icon
 						class="text-primary relative z-10 h-10 w-10 shrink-0 stroke-[0.5] transition-transform duration-500 group-hover:scale-110"
@@ -354,26 +420,28 @@
 				/>
 			</div>
 
-			<p
-				class="text-base-content/40 px-2 pt-2 pb-1 text-xs font-semibold tracking-widest uppercase"
-			>
-				{m.docsGuides()}
-			</p>
-
-			{#each guides as guide}
-				<button
-					class="w-full border-l-2 px-3 py-2 text-left font-sans text-sm transition-colors
-						{activePage === guide.id
-						? 'border-primary bg-primary/10 text-primary font-medium'
-						: 'text-base-content/60 hover:text-base-content hover:bg-base-300 border-transparent'}"
-					onclick={() => {
-						activePage = guide.id;
-						mobileNavOpen = false;
-					}}
+			{#if activeApi === 'market'}
+				<p
+					class="text-base-content/40 px-2 pt-2 pb-1 text-xs font-semibold tracking-widest uppercase"
 				>
-					{guide.label}
-				</button>
-			{/each}
+					{m.docsGuides()}
+				</p>
+
+				{#each guides as guide}
+					<button
+						class="w-full border-l-2 px-3 py-2 text-left font-sans text-sm transition-colors
+							{activePage === guide.id
+							? 'border-primary bg-primary/10 text-primary font-medium'
+							: 'text-base-content/60 hover:text-base-content hover:bg-base-300 border-transparent'}"
+						onclick={() => {
+							activePage = guide.id;
+							mobileNavOpen = false;
+						}}
+					>
+						{guide.label}
+					</button>
+				{/each}
+			{/if}
 
 			<p
 				class="text-base-content/40 px-2 pt-4 pb-1 text-xs font-semibold tracking-widest uppercase"
@@ -447,23 +515,25 @@
 		</div>
 
 		<nav class="max-h-[calc(100vh-200px)] overflow-y-auto py-2">
-			<p
-				class="text-base-content/40 px-4 pt-2 pb-1 text-xs font-semibold tracking-widest uppercase"
-			>
-				{m.docsGuides()}
-			</p>
-
-			{#each guides as guide}
-				<button
-					class="w-full border-l-2 px-4 py-1.5 text-left text-sm transition-colors
-						{activePage === guide.id
-						? 'border-primary bg-primary/10 text-primary font-medium'
-						: 'text-base-content/60 hover:text-base-content hover:bg-base-300 border-transparent'}"
-					onclick={() => (activePage = guide.id)}
+			{#if activeApi === 'market'}
+				<p
+					class="text-base-content/40 px-4 pt-2 pb-1 text-xs font-semibold tracking-widest uppercase"
 				>
-					{guide.label}
-				</button>
-			{/each}
+					{m.docsGuides()}
+				</p>
+
+				{#each guides as guide}
+					<button
+						class="w-full border-l-2 px-4 py-1.5 text-left text-sm transition-colors
+							{activePage === guide.id
+							? 'border-primary bg-primary/10 text-primary font-medium'
+							: 'text-base-content/60 hover:text-base-content hover:bg-base-300 border-transparent'}"
+						onclick={() => (activePage = guide.id)}
+					>
+						{guide.label}
+					</button>
+				{/each}
+			{/if}
 
 			<p
 				class="text-base-content/40 px-4 pt-4 pb-1 text-xs font-semibold tracking-widest uppercase"
@@ -659,13 +729,13 @@ Content-Type: application/json
 					></pre>
 			</div>
 		{:else if activePage === 'reference'}
-			{#if loading}
+			{#if (activeApi === 'market' && loading) || (activeApi === 'shipping' && loadingShipping)}
 				<div class="text-base-content/50 mt-20 flex items-center gap-3">
 					<span class="loading loading-spinner"></span> Loading spec...
 				</div>
-			{:else if fetchError}
+			{:else if (activeApi === 'market' && fetchError) || (activeApi === 'shipping' && shippingFetchError)}
 				<div class="alert alert-error">
-					Failed to load Swagger JSON from <code>{SWAGGER_URL}</code>
+					Failed to load Swagger JSON from <code>{activeApi === 'market' ? SWAGGER_URL : SWAGGER_URL_SHIPPING}</code>
 				</div>
 			{:else}
 				{@const info = spec as {

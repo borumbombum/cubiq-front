@@ -173,25 +173,10 @@
 			</li> -->
 			<li>
 				<a
-					href={localizeHref(AppConfig.cubiq.docs)}
-					class={[
-						'flex py-3 align-middle text-[16px] tracking-wider',
-						'border-b border-b-gray-700'
-					]}
-				>
-					<Book class="h-4" />
-					{m.documentation()}
-				</a>
-			</li>
-			<li>
-				<a
 					href={AppConfig.status}
 					rel="nofollow noopener"
 					target="_blank"
-					class={[
-						'flex py-3 align-middle text-[16px] tracking-wider',
-						'border-b border-b-gray-700'
-					]}
+					class="flex whitespace-nowrap border-b border-b-gray-700 py-3 align-middle text-[16px] tracking-wider"
 				>
 					<HeartPlus class="h-4" />
 					{m.apiStatus()}
@@ -200,18 +185,23 @@
 			<li>
 				<a
 					href={localizeHref('/blog')}
-					class={['flex py-3 align-middle text-[16px] tracking-wider']}
+					class="flex whitespace-nowrap border-b border-b-gray-700 py-3 align-middle text-[16px] tracking-wider"
 				>
 					<PenLine class="h-4" />
 					Blog
 				</a>
 			</li>
+			<li>
+				<a
+					href={localizeHref('/changelog')}
+					class="flex whitespace-nowrap py-3 align-middle text-[16px] tracking-wider"
+				>
+					<FileClock class="h-4" />
+					Roadmap
+				</a>
+			</li>
 		</ul>
 	</div>
 
-	<!-- <a class="uppercase" href={localizeHref('/soon')}>{m.menuPrices()}</a> -->
-	<!-- <a class="uppercase" href={localizeHref('/blog')}>Blog</a> -->
-	<!-- <a class="uppercase" href={localizeHref('/blog')}>Blog</a> -->
-
-	<a class="uppercase" href={localizeHref('/changelog')}>Roadmap</a>
+	<a class="uppercase" href={localizeHref(AppConfig.cubiq.docs)}>Docs</a>
 </div>
