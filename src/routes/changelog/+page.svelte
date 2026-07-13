@@ -18,7 +18,7 @@
 
 	const locale = getLocale();
 
-	let commits = $state<Commit[]>(data.commits ?? []);
+	let commits = $state<Commit[]>(data.commits?.filter((c) => c.repo !== 'minimo-io/betizen-ssg') ?? []);
 	let loading = $state(false);
 	let currentStartDate = $state(data.currentStartDate ?? '');
 	let currentEndDate = $state(data.currentEndDate ?? '');
@@ -189,11 +189,11 @@
 				};
 
 				if (actionData.success && Array.isArray(actionData.commits)) {
-					const newCommits = actionData.commits;
+					const newCommits = actionData.commits.filter((c) => c.repo !== 'minimo-io/betizen-ssg');
 
 					// Filter duplicates by SHA
 					const existingShas = new Set(commits.map((c) => c.sha));
-					const uniqueCommits = newCommits.filter((c) => !existingShas.has(c.sha));
+			const uniqueCommits = newCommits.filter((c) => !existingShas.has(c.sha) && c.repo !== 'minimo-io/betizen-ssg');
 
 					if (uniqueCommits.length !== newCommits.length) {
 						console.warn(
