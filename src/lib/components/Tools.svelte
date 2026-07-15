@@ -21,19 +21,19 @@
 		window.addEventListener('scroll', updateScrollY);
 
 		// Monitor focus changes to detect dropdown state
-		if (dropdownButton) {
-			dropdownButton.addEventListener('focus', () => {
-				isMenuOpen = true;
-			});
+		// if (dropdownButton) {
+		// 	dropdownButton.addEventListener('focus', () => {
+		// 		isMenuOpen = true;
+		// 	});
 
-			dropdownButton.addEventListener('blur', () => {
-				setTimeout(() => {
-					if (!dropdownContainer?.contains(document.activeElement)) {
-						isMenuOpen = false;
-					}
-				}, 100);
-			});
-		}
+		// 	dropdownButton.addEventListener('blur', () => {
+		// 		setTimeout(() => {
+		// 			if (!dropdownContainer?.contains(document.activeElement)) {
+		// 				isMenuOpen = false;
+		// 			}
+		// 		}, 100);
+		// 	});
+		// }
 
 		// Close when clicking a menu item
 		if (dropdownContainer) {
@@ -68,11 +68,16 @@
 		bind:this={dropdownContainer}
 		class="hover:bg-primary-700 active:bg-primary-800 fixed right-[26px] bottom-4 z-50 flex h-12 w-12 items-center justify-center rounded-full border-none bg-transparent text-white shadow-lg transition-all duration-300 ease-in-out hover:shadow-xl active:translate-y-0 sm:bottom-4 sm:h-10 sm:w-10 md:right-8 md:bottom-8 md:h-12 md:w-12"
 	>
-		<div bind:this={dropdownButton} tabindex="0" role="button" class="btn btn-circle">
+		<div bind:this={dropdownButton} tabindex="0" role="button" class="btn btn-circle z-50">
 			{#if isMenuOpen}
-				<X class="animate__animated animate__rotateIn animate__faster h-5 w-5" />
+				<X
+					class="animate__animated animate__rotateIn animate__faster h-5 w-5"
+					onclick={() => {
+						isMenuOpen = false;
+					}}
+				/>
 			{:else}
-				<CircleQuestionMark class="h-5" />
+				<CircleQuestionMark class="h-5" onclick={() => (isMenuOpen = true)} />
 			{/if}
 		</div>
 		<ul
