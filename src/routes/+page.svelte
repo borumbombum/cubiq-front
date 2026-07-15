@@ -29,12 +29,12 @@
 			src: '/products/home-enviqs.webp',
 			alt: 'Enviqs',
 			object: 'center'
-		},
-		{
-			src: '/products/home-bqpay.webp',
-			alt: 'BQPay',
-			object: 'center'
 		}
+		// {
+		// 	src: '/products/home-bqpay.webp',
+		// 	alt: 'BQPay',
+		// 	object: 'center'
+		// }
 
 		// {
 		// 	src: '/products/store/cubiq-store-dashboard-1.webp',

@@ -1,7 +1,19 @@
 <script lang="ts">
 	import { m } from '$paraglide/messages';
+	import { modalState } from '$stores/Modal.state.svelte';
+	import ContactForm from '$lib/components/Modal/ContactForm.svelte';
+	import { onMount } from 'svelte';
+
 	let isExpanded = $state(false);
 	let sectionElement: HTMLElement;
+
+	onMount(() => {
+		function handler() {
+			modalState.open({ component: ContactForm, size: 'lg', closeOnBackdrop: true, closeOnEscape: true });
+		}
+		window.addEventListener('open:contact', handler);
+		return () => window.removeEventListener('open:contact', handler);
+	});
 
 	function toggleExpanded() {
 		if (isExpanded) {
@@ -53,3 +65,9 @@
 		</div>
 	</section>
 </div>
+
+<style>
+	.fw-home-about :global(a) {
+		text-decoration: underline !important;
+	}
+</style>
