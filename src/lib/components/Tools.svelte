@@ -6,22 +6,15 @@
 	import { CircleQuestionMark, X } from '@lucide/svelte';
 	import { onMount } from 'svelte';
 
-	let showButton = $state(true);
 	let scrollY = $state(0);
+	let showButton = $derived(scrollY >= 0);
 
 	let dropdownButton: HTMLDivElement | undefined = $state();
 	let dropdownContainer: HTMLDivElement | undefined = $state();
 	let isMenuOpen = $state(false);
 	let mobileMenu: HTMLUListElement | undefined = $state();
 
-	let servicesOpen = $state(false);
-
 	const menuWidth = $state('12rem'); // w-64 : w-52
-
-	// Show button when user scrolls down 300px
-	$effect(() => {
-		showButton = scrollY >= 0;
-	});
 
 	onMount(() => {
 		const updateScrollY = () => (scrollY = window.scrollY);
@@ -37,7 +30,6 @@
 				setTimeout(() => {
 					if (!dropdownContainer?.contains(document.activeElement)) {
 						isMenuOpen = false;
-						servicesOpen = false;
 					}
 				}, 100);
 			});
@@ -48,7 +40,6 @@
 			dropdownContainer.addEventListener('click', (e) => {
 				if ((e.target as HTMLElement).tagName === 'A') {
 					isMenuOpen = false;
-					servicesOpen = false;
 					dropdownButton?.blur();
 				}
 			});
@@ -75,7 +66,7 @@
 	<!-- Menu -->
 	<div
 		bind:this={dropdownContainer}
-		class="dropdown dropdown-left dropdown-top hover:bg-primary-700 active:bg-primary-800 fixed right-(--cubiq-app-margin) bottom-4 z-50 flex h-12 w-12 items-center justify-center rounded-full border-none bg-transparent text-white shadow-lg transition-all duration-300 ease-in-out hover:shadow-xl active:translate-y-0 sm:bottom-4 sm:h-10 sm:w-10 md:right-8 md:bottom-8 md:h-12 md:w-12"
+		class="hover:bg-primary-700 active:bg-primary-800 fixed right-[26px] bottom-4 z-50 flex h-12 w-12 items-center justify-center rounded-full border-none bg-transparent text-white shadow-lg transition-all duration-300 ease-in-out hover:shadow-xl active:translate-y-0 sm:bottom-4 sm:h-10 sm:w-10 md:right-8 md:bottom-8 md:h-12 md:w-12"
 	>
 		<div bind:this={dropdownButton} tabindex="0" role="button" class="btn btn-circle">
 			{#if isMenuOpen}
@@ -87,8 +78,10 @@
 		<ul
 			bind:this={mobileMenu}
 			tabindex="-1"
-			style="width: {menuWidth}; transition: width 300ms cubic-bezier(0.33, 1, 0.68, 1);"
-			class="dropdown-content menu-sm menu rounded-box border-accent z-50 mt-3 w-[100px]! gap-2 rounded-lg border bg-black py-3 font-sans tracking-wider! shadow-xl"
+			style="width: {menuWidth}; transition: width 300ms cubic-bezier(0.33, 1, 0.68, 1); {isMenuOpen
+				? 'display: flex;'
+				: 'display: none;'}"
+			class="menu-sm menu rounded-box border-accent absolute right-0 bottom-full z-50 mb-3 w-[100px]! flex-col! gap-2 rounded-lg border bg-black py-3 font-sans tracking-wider! shadow-xl"
 		>
 			<li>
 				<button onclick={openContactModal}>Email</button>
