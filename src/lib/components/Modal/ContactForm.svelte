@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { PUBLIC_TURNSTILE_SITEKEY } from '$env/static/public';
 	import { AppConfig } from '$lib/configs';
 	import { m } from '$paraglide/messages';
 	import { getLocale } from '$paraglide/runtime';
@@ -11,6 +13,24 @@
 
 	let formOpenTime = Date.now();
 	let isSubmitting = $state(false);
+	let turnstileToken = $state<string | null>(null);
+	let turnstileContainer = $state<HTMLDivElement>();
+
+	onMount(() => {
+		const widgetId = turnstile.render(turnstileContainer!, {
+			sitekey: PUBLIC_TURNSTILE_SITEKEY,
+			callback: (token: string) => {
+				turnstileToken = token;
+			},
+			'expired-callback': () => {
+				turnstileToken = null;
+			}
+		});
+
+		return () => {
+			if (widgetId) turnstile.remove(widgetId);
+		};
+	});
 
 	let formData = $state({
 		name: '',
@@ -29,6 +49,7 @@
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					...formData,
+					turnstileToken,
 					timestamp: formOpenTime,
 					locale: getLocale(),
 					pagePath: page.url.pathname === '/' ? m.contactFormHomepage() : page.url.pathname
@@ -125,11 +146,19 @@
 						placeholder={m.contactFormMessagePlaceholder()}
 						rows="4"
 						required
-					></textarea>
+					>
+					</textarea>
 				</div>
 
+				<!-- Turnstile -->
+				<div class="mb-6" bind:this={turnstileContainer}></div>
+
 				<!-- Submit -->
-				<button type="submit" class="btn btn-primary w-full" disabled={isSubmitting}>
+				<button
+					type="submit"
+					class="btn btn-primary w-full"
+					disabled={isSubmitting || !turnstileToken}
+				>
 					{#if isSubmitting}
 						<Loader2 class="mr-2 h-4 w-4 animate-spin" />
 					{:else}
@@ -146,23 +175,15 @@
 		>
 			<div class="space-y-4">
 				<!-- WhatsApp -->
-				<a
-					href={AppConfig.cubiq.socials.whatsapp[locale]}
-					target="_blank"
-					rel="nofollow noreferrer"
-					class="btn btn-sm bg-base-100 border-base-300 text-base-content hover:border-base-content w-full justify-start transition-opacity hover:opacity-80"
-				>
+				<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+				<a href={AppConfig.cubiq.socials.whatsapp[locale]} target="_blank" rel="nofollow noreferrer" class="btn btn-sm bg-base-100 border-base-300 text-base-content hover:border-base-content w-full justify-start transition-opacity hover:opacity-80">
 					<img src="/whatsapp.png" alt="WhatsApp" class="mr-2 h-4 w-4" />
 					{m.contactFormWhatsapp()}
 				</a>
 
 				<!-- Telegram -->
-				<a
-					href={AppConfig.cubiq.socials.telegram}
-					target="_blank"
-					rel="nofollow noreferrer"
-					class="btn btn-sm bg-base-100 border-base-300 text-base-content hover:border-base-content w-full justify-start transition-opacity hover:opacity-80"
-				>
+				<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+				<a href={AppConfig.cubiq.socials.telegram} target="_blank" rel="nofollow noreferrer" class="btn btn-sm bg-base-100 border-base-300 text-base-content hover:border-base-content w-full justify-start transition-opacity hover:opacity-80">
 					<MessageCircle class="mr-2 h-4 w-4" />
 					{m.contactFormTelegram()}
 				</a>

@@ -1,15 +1,32 @@
 import { json } from '@sveltejs/kit';
-import { CUBIQ_API_APP_TOKEN } from '$env/static/private';
+import { CUBIQ_API_APP_TOKEN, TURNSTILE_SECRET_KEY } from '$env/static/private';
 import { m } from '$paraglide/messages';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request, getClientAddress }) => {
-	const { name, email, interest, message, timestamp, locale, pagePath } = await request.json();
+	const { name, email, interest, message, timestamp, locale, pagePath, turnstileToken } =
+		await request.json();
 	const ip = getClientAddress();
 
 	// Time check - reject if submitted too fast (< 3 seconds)
 	if (Date.now() - timestamp < 3000) {
 		return json({ success: false, message: 'Submission too fast' }, { status: 400 });
+	}
+
+	// Verify Turnstile token
+	const turnstileRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+		body: new URLSearchParams({
+			secret: TURNSTILE_SECRET_KEY,
+			response: turnstileToken,
+			remoteip: ip
+		})
+	});
+	const turnstileResult = await turnstileRes.json();
+
+	if (!turnstileResult.success) {
+		return json({ success: false, message: 'Verification failed' }, { status: 400 });
 	}
 
 	const localeLabels: Record<string, string> = {

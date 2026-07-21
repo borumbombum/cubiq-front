@@ -1,7 +1,7 @@
 {
 	"name": "cubiq-front",
 	"private": true,
-	"version": "1.2.51",
+	"version": "1.2.52",
 	"type": "module",
 	"engines": {
 		"node": ">=24"
@@ -28,6 +28,7 @@
 		"@tailwindcss/typography": "^0.5.16",
 		"@tailwindcss/vite": "^4.1.13",
 		"@types/bcrypt": "^6.0.0",
+		"@types/cloudflare-turnstile": "^0.2.2",
 		"@types/jsonwebtoken": "^9.0.10",
 		"@types/marked": "^6.0.0",
 		"@types/pg": "^8.15.5",
