@@ -111,7 +111,7 @@
 
 	<!-- Actual hero -->
 	<div class="max-w-fw container mx-auto pt-5 pb-1">
-		<nav class="sticky top-0 z-50 flex items-center justify-between">
+		<nav class="sticky top-0 z-200 flex items-center justify-between">
 			<!-- Logos -->
 			<HeaderLogo />
 

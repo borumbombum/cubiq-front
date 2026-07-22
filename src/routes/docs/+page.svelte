@@ -79,7 +79,7 @@
 	let fetchError = $state(false);
 	let loadingShipping = $state(false);
 	let shippingFetchError = $state(false);
-	let activePage = $state('quickstart');
+	let activePage = $state('reference');
 	let openCards = $state(new Set<string>());
 	let openTags = $state(new Set<string>());
 	let search = $state('');

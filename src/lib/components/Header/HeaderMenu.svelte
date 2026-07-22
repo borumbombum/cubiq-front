@@ -1,19 +1,12 @@
 <script lang="ts">
-	import {
-		Book,
-		Cable,
-		ChevronDown,
-		FileClock,
-		Headset,
-		HeartPlus,
-		PenLine,
-		Zap
-	} from '@lucide/svelte';
+	import { ChevronDown, FileClock, HeartPlus, PenLine, Send } from '@lucide/svelte';
 	import { getLocale, localizeHref } from '$paraglide/runtime';
 	import { getProductsFromLab, getProducts } from '$lib/data/products.data';
 	import { m } from '$paraglide/messages';
 	import { AppConfig } from '$lib/configs';
 	import type { ProductData } from '$types/products.types';
+	import { modalState } from '$stores/Modal.state.svelte';
+	import ContactForm from '$lib/components/Modal/ContactForm.svelte';
 	// import { Tween } from 'svelte/motion';
 	// import { cubicIn, cubicOut } from 'svelte/easing';
 	// import { onMount } from 'svelte';
@@ -24,17 +17,27 @@
 		PRODUCTS.filter((prod: ProductData) => prod.isMain && !prod.hideFromNav)
 	);
 
-	const API_PRODUCTS = getProducts(locale);
-	let apisForLang = $state(API_PRODUCTS.filter((prod: ProductData) => prod.isMain).slice(0, 3));
+	// const API_PRODUCTS = getProducts(locale);
+	// let apisForLang = $state(API_PRODUCTS.filter((prod: ProductData) => prod.isMain).slice(0, 3));
 
 	function getHref(url: string | undefined): string {
 		if (!url) return '/';
 		if (url.startsWith('http')) return url;
 		return localizeHref(url, { locale: locale });
 	}
+
+	function openContactModal(e: KeyboardEvent) {
+		e.preventDefault();
+		modalState.open({
+			component: ContactForm,
+			size: 'lg',
+			closeOnBackdrop: true,
+			closeOnEscape: true
+		});
+	}
 </script>
 
-<div class="fw-header-fs z-50 hidden items-center justify-center gap-10 md:flex">
+<div class="fw-header-fs z-50 hidden items-center justify-center gap-8 md:flex">
 	<div class="dropdown Xdropdown-hover relative">
 		<div class="cursor-fw flex items-center uppercase" tabindex="0" role="button">
 			<!-- <Zap
@@ -189,6 +192,16 @@
 				>
 					<PenLine class="h-4" />
 					Blog
+				</a>
+			</li>
+			<li>
+				<a
+					href={localizeHref('/changelog')}
+					onclick={openContactModal}
+					class="flex py-3 align-middle text-[16px] tracking-wider whitespace-nowrap"
+				>
+					<Send class="h-4" />
+					{m.contact()}
 				</a>
 			</li>
 			<!-- <li>

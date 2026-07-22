@@ -74,7 +74,7 @@
 	}
 </script>
 
-<div class="p-6 md:p-8">
+<div class="p-2 md:p-8">
 	<!-- Title -->
 	<h2 class="font-pixel mb-6 text-xl font-bold">{m.contactFormTitle()}</h2>
 

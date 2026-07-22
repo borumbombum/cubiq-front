@@ -13,7 +13,8 @@
 	} from '@lucide/svelte';
 	import { openSubmenu } from '$stores/DrawerState.state.svelte';
 	import { localizeHref, getLocale } from '$paraglide/runtime';
-	import WhatsappButton from '../WhatsappButton.svelte';
+	import { modalState } from '$lib/stores/Modal.state.svelte';
+	import ContactForm from '$lib/components/Modal/ContactForm.svelte';
 	import { getLocaleName } from '$utils';
 	import { m } from '$paraglide/messages';
 	import { AppConfig } from '$lib/configs';
@@ -33,6 +34,15 @@
 	const drawerApisForLang = $state(
 		API_PRODUCTS.filter((prod: ProductData) => prod.isMain).slice(0, 3)
 	);
+
+	function openContactModal() {
+		modalState.open({
+			component: ContactForm,
+			size: 'lg',
+			closeOnBackdrop: true,
+			closeOnEscape: true
+		});
+	}
 
 	function getHref(url: string | undefined): string {
 		if (!url) return '/';
@@ -270,7 +280,7 @@
 	>
 		<div class="flex justify-center self-center text-left align-middle">
 			<FileClock class="text-sun mr-2 h-4 w-4 self-center" />
-			<span class="self-center font-semibold">Roadmap</span>
+			<span class="self-center font-semibold">Changelog</span>
 		</div>
 	</a>
 
@@ -291,17 +301,21 @@
 		</div>
 	</a> -->
 
-	<!-- Item with submenu -->
+	<!-- Contact -->
 	<div
 		class="border-base-300 font-roboto text-grey-dark shine-effect flex justify-between border-t border-b px-[30px] py-3 text-left align-middle text-sm"
 	>
 		<div class="flex justify-center self-center text-left align-middle">
 			<Headset class="mr-2 h-4 w-4 self-center" />
-			<span class="self-center font-semibold">{m.help()}</span>
+			<span class="self-center font-semibold">{m.contact()}</span>
 		</div>
 		<div class="text-grey-medium flex flex-row self-center align-middle">
-			<WhatsappButton />
+			<button
+				onclick={openContactModal}
+				class="font-roboto text-grey-medium-dark border-grey-lighter shine-effect flex scale-105 items-center rounded-md border px-[7px] py-[3px] text-xs font-[11px] antialiased"
+			>
+				{m.getInTouch()}
+			</button>
 		</div>
 	</div>
-
 </div>

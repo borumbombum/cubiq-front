@@ -20,7 +20,7 @@
 >
 	<!-- Actual hero -->
 	<div class="max-w-fw container mx-auto pt-5 pb-1">
-		<nav class="relative z-20 flex items-center justify-between">
+		<nav class="Xz-20 relative z-200 flex items-center justify-between">
 			<!-- Logos -->
 			<HeaderLogo />
 

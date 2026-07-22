@@ -33,7 +33,7 @@
 
 {#if drawerState.active}
 	<div
-		class="fixed inset-y-0 left-0 z-100 mt-[85px] w-screen bg-black md:w-64"
+		class="Xmt-[85px] fixed inset-y-0 left-0 z-100 w-screen bg-black pt-[85px] md:w-64"
 		transition:slide={{ duration: 300, easing: quintOut }}
 	>
 		<div class="flex h-full flex-col justify-start overflow-hidden">
@@ -53,7 +53,7 @@
 			{#if !drawerState.currentSubmenu}
 				<DrawerMain />
 				<div class="flex-shrink-0 px-[30px] py-2">
-					<span class="font-mono text-xs text-base-content/30">
+					<span class="text-base-content/30 font-mono text-xs">
 						v{process.env.PACKAGE_VERSION}
 					</span>
 				</div>
