@@ -14,9 +14,9 @@
 	import { m } from '$paraglide/messages';
 	import { AppConfig } from '$lib/configs';
 	import type { ProductData } from '$types/products.types';
-	import { Tween } from 'svelte/motion';
-	import { cubicIn, cubicOut } from 'svelte/easing';
-	import { onMount } from 'svelte';
+	// import { Tween } from 'svelte/motion';
+	// import { cubicIn, cubicOut } from 'svelte/easing';
+	// import { onMount } from 'svelte';
 
 	const locale = $state(getLocale());
 	const PRODUCTS = getProductsFromLab(locale);
@@ -176,7 +176,7 @@
 					href={AppConfig.status}
 					rel="nofollow noopener"
 					target="_blank"
-					class="flex whitespace-nowrap border-b border-b-gray-700 py-3 align-middle text-[16px] tracking-wider"
+					class="flex border-b border-b-gray-700 py-3 align-middle text-[16px] tracking-wider whitespace-nowrap"
 				>
 					<HeartPlus class="h-4" />
 					{m.apiStatus()}
@@ -185,7 +185,7 @@
 			<li>
 				<a
 					href={localizeHref('/blog')}
-					class="flex whitespace-nowrap border-b border-b-gray-700 py-3 align-middle text-[16px] tracking-wider"
+					class="flex border-b border-b-gray-700 py-3 align-middle text-[16px] tracking-wider whitespace-nowrap"
 				>
 					<PenLine class="h-4" />
 					Blog
@@ -194,7 +194,7 @@
 			<li>
 				<a
 					href={localizeHref('/changelog')}
-					class="flex whitespace-nowrap py-3 align-middle text-[16px] tracking-wider"
+					class="flex py-3 align-middle text-[16px] tracking-wider whitespace-nowrap"
 				>
 					<FileClock class="h-4" />
 					Roadmap
@@ -203,5 +203,6 @@
 		</ul>
 	</div>
 
+	<a class="uppercase" href={localizeHref('/roadmap')}>Roadmap</a>
 	<a class="uppercase" href={localizeHref(AppConfig.cubiq.docs)}>Docs</a>
 </div>

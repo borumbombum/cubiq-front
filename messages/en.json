@@ -360,6 +360,8 @@
 	"changelogNoCommits": "No commits to display",
 	"changelogError": "Failed to load commits",
 	"changelogCommitStats": "Commits: Human ({human}) - Agent ({agent})",
+	"human": "Human",
+	"agent": "Agent",
 	"addNote": "New note",
 	"addNotePlaceholder": "So, write your note here...",
 	"notSynced": "Not synced",

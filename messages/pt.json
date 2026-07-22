@@ -365,6 +365,8 @@
 	"changelogNoCommits": "Nenhum commit para exibir",
 	"changelogError": "Erro ao carregar commits",
 	"changelogCommitStats": "Mudanças: Humanos ({human}) - Agentes ({agent})",
+	"human": "Humano",
+	"agent": "Agente",
 	"addNote": "Nova nota",
 	"addNotePlaceholder": "Então, escreva sua anotação aqui...",
 	"notSynced": "Não sincronizada",
